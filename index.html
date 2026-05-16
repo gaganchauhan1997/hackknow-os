@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cosmos">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050510">
+<meta name="description" content="HACKKNOW//OS — Building intelligent systems beyond imagination. Founded by Gagan Chauhan. Multi-orchestrated AI, edge infra, India-first commerce.">
+<meta property="og:title" content="HACKKNOW//OS — Building Intelligent Systems Beyond Imagination">
+<meta property="og:description" content="A cinematic developer showcase. Cosmic brutalism. Founded by Gagan Chauhan.">
+<meta property="og:type" content="website">
+<title>HACKKNOW//OS — Building Intelligent Systems Beyond Imagination</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFD60A'/%3E%3Ctext x='16' y='23' font-family='monospace' font-weight='900' font-size='18' fill='%230A0A0A' text-anchor='middle'%3EHK%3C/text%3E%3C/svg%3E">
+</head>
+<body data-mode="default">
+
+<!-- ═══ COSMIC LOADER ═══ -->
+<div id="loader" class="loader" aria-hidden="true">
+  <div class="loader-grid"></div>
+  <div class="loader-noise"></div>
+  <div class="loader-content">
+    <div class="loader-logo">
+      <div class="logo-ring"></div>
+      <div class="logo-ring delay-1"></div>
+      <div class="logo-ring delay-2"></div>
+      <div class="logo-cross"></div>
+      <div class="logo-core">HK</div>
+    </div>
+    <div class="loader-meta">
+      <div class="loader-title">HACKKNOW//OS</div>
+      <div class="loader-version">v2026.05.16 · KERNEL BOOT · DELHI/IND</div>
+    </div>
+    <div class="loader-progress">
+      <div class="loader-bar"><div class="loader-fill" id="loader-fill"></div></div>
+      <div class="loader-percent" id="loader-percent">000%</div>
+    </div>
+    <div class="loader-logs" id="loader-logs"></div>
+    <div class="loader-corner top-left">[ KERNEL ]</div>
+    <div class="loader-corner top-right">[ INIT ]</div>
+    <div class="loader-corner bottom-left">[ SECTOR · 0xFF7A56 ]</div>
+    <div class="loader-corner bottom-right">[ NODE · DEL-01 ]</div>
+  </div>
+</div>
+
+<!-- ═══ COSMIC BACKGROUND CANVAS ═══ -->
+<canvas id="cosmos-canvas" class="cosmos-canvas" aria-hidden="true"></canvas>
+
+<!-- ═══ DECORATIVE OVERLAYS ═══ -->
+<div class="bg-noise" aria-hidden="true"></div>
+<div class="bg-vignette" aria-hidden="true"></div>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-scanlines" aria-hidden="true"></div>
+
+<!-- ═══ CUSTOM CURSOR ═══ -->
+<div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+<canvas id="spark-canvas" class="spark-canvas" aria-hidden="true"></canvas>
+
+<!-- ═══ SCROLL PROGRESS ═══ -->
+<div class="scroll-progress" aria-hidden="true">
+  <div class="scroll-fill" id="scroll-fill"></div>
+</div>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar" id="navbar">
+  <a href="#hero" class="nav-brand" data-cursor="link">
+    <div class="nav-logo">
+      <span class="logo-letter">H</span>
+      <span class="logo-slash">//</span>
+      <span class="logo-letter">K</span>
+    </div>
+    <div class="nav-name">
+      <span class="name-main">HACKKNOW</span>
+      <span class="name-os">//OS</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about" data-cursor="link"><span class="link-num">01</span>DOSSIER</a></li>
+    <li><a href="#projects" data-cursor="link"><span class="link-num">02</span>PROJECTS</a></li>
+    <li><a href="#skills" data-cursor="link"><span class="link-num">03</span>MATRIX</a></li>
+    <li><a href="#timeline" data-cursor="link"><span class="link-num">04</span>TIMELINE</a></li>
+    <li><a href="#vision" data-cursor="link"><span class="link-num">05</span>VISION</a></li>
+  </ul>
+  <div class="nav-status">
+    <div class="status-pulse"></div>
+    <div class="status-block">
+      <div class="status-label">▸ STATUS</div>
+      <div class="status-text">ONLINE</div>
+    </div>
+    <div class="status-block status-time-block">
+      <div class="status-label">▸ DEL/IST</div>
+      <div class="status-text" id="status-time">00:00:00</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ FLOATING DOCK ═══ -->
+<div class="dock" id="dock" aria-label="Command dock">
+  <button class="dock-btn" data-action="terminal" title="Terminal (T)" data-cursor="button">
+    <span class="dock-icon">▸_</span>
+    <span class="dock-label">TERM</span>
+    <span class="dock-key">T</span>
+  </button>
+  <button class="dock-btn" data-action="palette" title="Command Palette (/ or ⌘K)" data-cursor="button">
+    <span class="dock-icon">⌘</span>
+    <span class="dock-label">CMD</span>
+    <span class="dock-key">/</span>
+  </button>
+  <button class="dock-btn" data-action="music" title="Ambient (M)" data-cursor="button">
+    <span class="dock-icon" id="music-icon">♪</span>
+    <span class="dock-label">SND</span>
+    <span class="dock-key">M</span>
+  </button>
+  <button class="dock-btn" data-action="galaxy" title="Galaxy Mode (G)" data-cursor="button">
+    <span class="dock-icon">✦</span>
+    <span class="dock-label">GLXY</span>
+    <span class="dock-key">G</span>
+  </button>
+  <button class="dock-btn" data-action="cinematic" title="Cinematic Mode (Shift+Space)" data-cursor="button">
+    <span class="dock-icon">◉</span>
+    <span class="dock-label">CINE</span>
+    <span class="dock-key">⇧␣</span>
+  </button>
+</div>
+
+<!-- ═══ SYSTEM HUD (corner widgets) ═══ -->
+<aside class="hud-corner hud-tl" aria-hidden="true">
+  <div class="hud-block">▸ HK_OS v2026.05.16</div>
+  <div class="hud-block">▸ NODE · DEL-01</div>
+  <div class="hud-block">▸ UPLINK · CF</div>
+</aside>
+<aside class="hud-corner hud-br" aria-hidden="true">
+  <div class="hud-block">▸ FPS <span id="fps-counter">60</span></div>
+  <div class="hud-block">▸ COORD <span id="mouse-coord">000,000</span></div>
+  <div class="hud-block">▸ MODE <span id="mode-indicator">DEFAULT</span></div>
+</aside>
+
+<!-- ═══ FAKE NOTIFICATIONS ═══ -->
+<div class="notif-container" id="notif-container" aria-live="polite"></div>
+
+<main id="main">
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO SECTION
+     ═══════════════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-bg-rays"></div>
+  <div class="hero-content">
+    <div class="hero-badge" data-cursor="default">
+      <span class="badge-pulse"></span>
+      <span class="badge-text">SYS://ONLINE · ACCEPTING SIGNALS</span>
+      <span class="badge-time" id="badge-time">∞</span>
+    </div>
+    <h1 class="hero-title">
+      <span class="hero-line" data-text="BUILDING">BUILDING</span>
+      <span class="hero-line hero-line-accent" data-text="INTELLIGENT">INTELLIGENT</span>
+      <span class="hero-line" data-text="SYSTEMS">SYSTEMS</span>
+      <span class="hero-line hero-line-small" data-text="BEYOND IMAGINATION">BEYOND&nbsp;IMAGINATION<span class="title-cursor"></span></span>
+    </h1>
+    <div class="hero-mono">
+      <span class="mono-prompt">$</span>
+      <span class="mono-text" id="hero-typer"></span>
+      <span class="mono-caret"></span>
+    </div>
+    <p class="hero-sub">
+      Founder · <strong>HACKKNOW.COM</strong> · Multi-orchestrated AI · Voice systems · Excel intelligence ·
+      Building products for <strong>1.4 billion Indians</strong>
+    </p>
+    <div class="hero-ctas">
+      <a class="brutal-btn brutal-btn-primary magnetic" href="#projects" data-cursor="button">
+        <span class="btn-bracket">[</span>
+        <span class="btn-text">ENTER THE LAB</span>
+        <span class="btn-arrow">▸</span>
+        <span class="btn-bracket">]</span>
+        <span class="btn-glow"></span>
+      </a>
+      <a class="brutal-btn brutal-btn-ghost magnetic" href="https://hackknow.com" target="_blank" rel="noopener" data-cursor="button">
+        <span class="btn-bracket">[</span>
+        <span class="btn-text">HACKKNOW.COM</span>
+        <span class="btn-arrow">↗</span>
+        <span class="btn-bracket">]</span>
+      </a>
+      <button class="brutal-btn brutal-btn-cyan magnetic" data-action="terminal" data-cursor="button">
+        <span class="btn-bracket">[</span>
+        <span class="btn-text">▸_ OPEN TERMINAL</span>
+        <span class="btn-bracket">]</span>
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num" data-target="396">000</div>
+        <div class="stat-label">▸ PRODUCTS LIVE</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-target="60">00</div>
+        <div class="stat-label">▸ BLOGS / DAY</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-target="24">00</div>
+        <div class="stat-label">▸ CATEGORIES</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-target="4">0</div>
+        <div class="stat-label">▸ AI ENGINES</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-hud">
+    <div class="hud-card hud-card-tl">
+      <div class="hud-card-label">▸ NEURAL MATRIX</div>
+      <div class="hud-card-value">GROQ · GEMINI · CLAUDE · LLAMA</div>
+      <div class="hud-card-bar"><div class="hud-card-fill" style="--w:94%"></div></div>
+      <div class="hud-card-sub">4 ENGINES · ORCHESTRATED · LIVE</div>
+    </div>
+    <div class="hud-card hud-card-tr">
+      <div class="hud-card-label">▸ EDGE NETWORK</div>
+      <div class="hud-card-value">CLOUDFLARE · 330 POPS</div>
+      <div class="hud-card-bar"><div class="hud-card-fill" style="--w:99%"></div></div>
+      <div class="hud-card-sub">WORKERS · PAGES · KV · R2 · D1</div>
+    </div>
+    <div class="hud-card hud-card-bl">
+      <div class="hud-card-label">▸ STACK</div>
+      <div class="hud-card-value">REACT · TS · WP · PY</div>
+      <div class="hud-card-bar"><div class="hud-card-fill" style="--w:88%"></div></div>
+      <div class="hud-card-sub">MONOREPO · TYPED · DEPLOYED</div>
+    </div>
+    <div class="hud-card hud-card-br">
+      <div class="hud-card-label">▸ ORIGIN</div>
+      <div class="hud-card-value">DELHI · INDIA · EARTH</div>
+      <div class="hud-card-bar"><div class="hud-card-fill" style="--w:100%"></div></div>
+      <div class="hud-card-sub">28.6139°N · 77.2090°E</div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint" data-cursor="default">
+    <div class="scroll-mouse"></div>
+    <span>SCROLL TO TRANSMIT ▼</span>
+  </div>
+  <div class="hero-side-text left">▸ COSMIC BRUTALISM · EST. 2024 · MADE IN INDIA 🇮🇳</div>
+  <div class="hero-side-text right">▸ AWAITING SIGNAL ▪ ▪ ▪</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 01 — DOSSIER (ABOUT)
+     ═══════════════════════════════════════════════════════ -->
+<section class="section about" id="about">
+  <header class="section-header">
+    <div class="section-num">01 //</div>
+    <h2 class="section-title">DOSSIER<span class="title-cursor"></span></h2>
+    <div class="section-line"></div>
+    <div class="section-meta">OPERATOR · IDENTITY · MISSION</div>
+  </header>
+  <div class="about-grid">
+    <article class="about-main brutal-card reveal" data-tilt>
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+      <div class="about-header">
+        <div class="about-avatar">
+          <div class="avatar-ring"></div>
+          <div class="avatar-ring-2"></div>
+          <div class="avatar-letter">G</div>
+        </div>
+        <div class="about-id">
+          <div class="about-name">GAGAN CHAUHAN</div>
+          <div class="about-role">▸ FOUNDER · ARCHITECT · OPERATOR</div>
+          <div class="about-meta">DELHI ▪ INDIA ▪ BCA ▪ EST. 2024 ▪ CLASS: SOLO-FOUNDER</div>
+        </div>
+      </div>
+      <p class="about-text">
+        I run <strong>HACKKNOW.COM</strong> — a premium digital marketplace built for the next billion Indian professionals. Solo stack: <strong>React 19 + Cloudflare Workers + WordPress headless + Razorpay</strong>. I orchestrate <strong>four AI engines simultaneously</strong> — Groq, Gemini, Claude, Llama — to generate, qualify, and ship products at a velocity no team my size has any business achieving.
+      </p>
+      <p class="about-text">
+        The mission is simple: <strong>make every Indian professional 10× faster.</strong> Faster in Excel. Faster at SEO. Faster at every workflow that should never have been manual. I build the tooling, the AI, the storefront, and the brand from the same chair.
+      </p>
+      <div class="about-tags">
+        <span class="tag">▸ AI MULTI-ORCH</span>
+        <span class="tag">▸ EDGE INFRA</span>
+        <span class="tag">▸ HEADLESS COMMERCE</span>
+        <span class="tag">▸ INDIA-FIRST</span>
+        <span class="tag tag-magenta">▸ BUILDING IN PUBLIC</span>
+      </div>
+    </article>
+    <div class="about-side">
+      <div class="brutal-card stat-card reveal" data-tilt>
+        <div class="stat-card-corner"></div>
+        <div class="stat-card-label">▸ DAILY OPS</div>
+        <div class="stat-card-value">60+ BLOGS</div>
+        <div class="stat-card-sub">Auto-shipped via Groq + GitHub Actions cron · every 4h · 80-keyword seed</div>
+        <div class="stat-card-meter"><div class="stat-card-fill" style="--w:88%"></div></div>
+      </div>
+      <div class="brutal-card stat-card stat-card-magenta reveal" data-tilt>
+        <div class="stat-card-corner"></div>
+        <div class="stat-card-label">▸ CATALOG</div>
+        <div class="stat-card-value">396 → 1K</div>
+        <div class="stat-card-sub">Products live and scaling across 24 categories on hackknow.com</div>
+        <div class="stat-card-meter"><div class="stat-card-fill" style="--w:39%"></div></div>
+      </div>
+      <div class="brutal-card stat-card stat-card-cyan reveal" data-tilt>
+        <div class="stat-card-corner"></div>
+        <div class="stat-card-label">▸ LANGUAGES</div>
+        <div class="stat-card-value">EN · हिं · HI-EN</div>
+        <div class="stat-card-sub">Yahavi AI v3.3 multilingual · next: Tamil, Marathi, Bengali</div>
+        <div class="stat-card-meter"><div class="stat-card-fill" style="--w:62%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Philosophy ticker -->
+  <div class="ticker reveal" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-item">▸ SHIP SOMETHING TODAY</span>
+      <span class="ticker-item">▸ AI IS THE NEW ELECTRICITY</span>
+      <span class="ticker-item">▸ BUILT FOR INDIA · BUILT IN THE OPEN</span>
+      <span class="ticker-item">▸ ONE FOUNDER · FOUR ENGINES · INFINITE SHIPS</span>
+      <span class="ticker-item">▸ NEOBRUTALISM × COSMIC FUTURE</span>
+      <span class="ticker-item">▸ NO PERMISSION REQUIRED</span>
+      <!-- duplicate for seamless loop -->
+      <span class="ticker-item">▸ SHIP SOMETHING TODAY</span>
+      <span class="ticker-item">▸ AI IS THE NEW ELECTRICITY</span>
+      <span class="ticker-item">▸ BUILT FOR INDIA · BUILT IN THE OPEN</span>
+      <span class="ticker-item">▸ ONE FOUNDER · FOUR ENGINES · INFINITE SHIPS</span>
+      <span class="ticker-item">▸ NEOBRUTALISM × COSMIC FUTURE</span>
+      <span class="ticker-item">▸ NO PERMISSION REQUIRED</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 02 — PROJECTS
+     ═══════════════════════════════════════════════════════ -->
+<section class="section projects" id="projects">
+  <header class="section-header">
+    <div class="section-num">02 //</div>
+    <h2 class="section-title">PROJECTS<span class="title-cursor"></span></h2>
+    <div class="section-line"></div>
+    <div class="section-meta">SHIPPED · ACTIVE · UNRELEASED</div>
+  </header>
+  <div class="projects-grid">
+
+    <article class="project-card brutal-card reveal" data-tilt data-cursor="card" data-project="hackknow">
+      <div class="project-tag">▸ FLAGSHIP</div>
+      <div class="project-num">P01</div>
+      <div class="project-glow project-glow-yellow"></div>
+      <h3 class="project-title">HACKKNOW.COM</h3>
+      <p class="project-sub">India's premium digital marketplace · 396+ products · WordPress + WPGraphQL + Razorpay · headless commerce on Cloudflare</p>
+      <div class="project-stack">
+        <span class="stack">REACT 19</span>
+        <span class="stack">CF WORKERS</span>
+        <span class="stack">WPGraphQL</span>
+        <span class="stack">RAZORPAY</span>
+        <span class="stack">WOOCOMMERCE</span>
+      </div>
+      <div class="project-metric">
+        <div><span class="metric-label">USERS</span><span class="metric-val">12.4K</span></div>
+        <div><span class="metric-label">PRODUCTS</span><span class="metric-val">396</span></div>
+        <div><span class="metric-label">UPTIME</span><span class="metric-val">99.9%</span></div>
+      </div>
+      <a class="project-link" href="https://hackknow.com" target="_blank" rel="noopener" data-cursor="link">▸ VISIT HACKKNOW.COM ↗</a>
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+    </article>
+
+    <article class="project-card brutal-card reveal" data-tilt data-cursor="card" data-project="yexcel">
+      <div class="project-tag tag-magenta">▸ AI · FREE</div>
+      <div class="project-num">P02</div>
+      <div class="project-glow project-glow-magenta"></div>
+      <h3 class="project-title">YEXCEL</h3>
+      <p class="project-sub">CSV → working Excel dashboard generator. Single Cloudflare Worker. No signup, no paywall, no deps. Make every Indian professional 10× faster.</p>
+      <div class="project-stack">
+        <span class="stack">CF WORKERS</span>
+        <span class="stack">GROQ</span>
+        <span class="stack">OOXML</span>
+        <span class="stack">PYODIDE</span>
+      </div>
+      <div class="project-metric">
+        <div><span class="metric-label">GEN TIME</span><span class="metric-val">8s</span></div>
+        <div><span class="metric-label">COST</span><span class="metric-val">$0</span></div>
+        <div><span class="metric-label">DEPS</span><span class="metric-val">0</span></div>
+      </div>
+      <a class="project-link" href="https://yexcel.hackknow.com" target="_blank" rel="noopener" data-cursor="link">▸ TRY YEXCEL.HACKKNOW.COM ↗</a>
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+    </article>
+
+    <article class="project-card brutal-card reveal" data-tilt data-cursor="card" data-project="yahavi">
+      <div class="project-tag tag-cyan">▸ MULTILINGUAL</div>
+      <div class="project-num">P03</div>
+      <div class="project-glow project-glow-cyan"></div>
+      <h3 class="project-title">YAHAVI AI</h3>
+      <p class="project-sub">Multilingual AI sales sensei. EN + हिंदी + Hinglish. v3.3 product-aware upsell. Next stop: Tamil, Marathi, Bengali.</p>
+      <div class="project-stack">
+        <span class="stack">GEMINI</span>
+        <span class="stack">GROQ</span>
+        <span class="stack">LANGCHAIN</span>
+        <span class="stack">RAG</span>
+        <span class="stack">CF AI</span>
+      </div>
+      <div class="project-metric">
+        <div><span class="metric-label">LANGS</span><span class="metric-val">3→6</span></div>
+        <div><span class="metric-label">VERSION</span><span class="metric-val">3.3</span></div>
+        <div><span class="metric-label">UPSELL</span><span class="metric-val">+34%</span></div>
+      </div>
+      <a class="project-link" href="https://yahavis.hackknow.com" target="_blank" rel="noopener" data-cursor="link">▸ CHAT YAHAVI ↗</a>
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+    </article>
+
+    <article class="project-card brutal-card reveal" data-tilt data-cursor="card" data-project="yahavi-beyond">
+      <div class="project-tag tag-orange">▸ VOICE · BETA</div>
+      <div class="project-num">P04</div>
+      <div class="project-glow project-glow-orange"></div>
+      <h3 class="project-title">YAHAVI-BEYOND</h3>
+      <p class="project-sub">Jarvis-grade voice assistant. Wake-word + intent routing + 7 connected skills. Mac · Android · ambient compute.</p>
+      <div class="project-stack">
+        <span class="stack">WHISPER</span>
+        <span class="stack">PIPER</span>
+        <span class="stack">PYTHON</span>
+        <span class="stack">SWIFT</span>
+        <span class="stack">KOTLIN</span>
+      </div>
+      <div class="project-metric">
+        <div><span class="metric-label">SKILLS</span><span class="metric-val">7</span></div>
+        <div><span class="metric-label">WAKE</span><span class="metric-val">YAHAVI</span></div>
+        <div><span class="metric-label">LATENCY</span><span class="metric-val">240ms</span></div>
+      </div>
+      <a class="project-link" href="#" data-cursor="link">▸ STATUS · BETA INTERNAL</a>
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+    </article>
+
+    <article class="project-card brutal-card reveal" data-tilt data-cursor="card" data-project="auto-blog">
+      <div class="project-tag tag-green">▸ AUTOMATION</div>
+      <div class="project-num">P05</div>
+      <div class="project-glow project-glow-green"></div>
+      <h3 class="project-title">AUTO-BLOG ENGINE</h3>
+      <p class="project-sub">10× Groq keys · GitHub Actions cron · 60 SEO posts/day · 24 categories · anti-AI-tell prompt · rate-limit cooldown built in.</p>
+      <div class="project-stack">
+        <span class="stack">GROQ</span>
+        <span class="stack">GH ACTIONS</span>
+        <span class="stack">PYTHON</span>
+        <span class="stack">WPGraphQL</span>
+      </div>
+      <div class="project-metric">
+        <div><span class="metric-label">POSTS/DAY</span><span class="metric-val">60</span></div>
+        <div><span class="metric-label">KEYWORDS</span><span class="metric-val">80</span></div>
+        <div><span class="metric-label">COST/POST</span><span class="metric-val">$0.003</span></div>
+      </div>
+      <a class="project-link" href="#" data-cursor="link">▸ INTERNAL PIPELINE</a>
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+    </article>
+
+    <article class="project-card brutal-card reveal" data-tilt data-cursor="card" data-project="influencer">
+      <div class="project-tag">▸ NEXT</div>
+      <div class="project-num">P06</div>
+      <div class="project-glow project-glow-yellow"></div>
+      <h3 class="project-title">AI INFLUENCER GRID</h3>
+      <p class="project-sub">A grid of synthetic personas with consistent style. Veo + Gemini Image + voice cloning. Brand-safe, India-first, fully autonomous content engines.</p>
+      <div class="project-stack">
+        <span class="stack">VEO 3.1</span>
+        <span class="stack">GEMINI IMG</span>
+        <span class="stack">TTS</span>
+        <span class="stack">N8N</span>
+      </div>
+      <div class="project-metric">
+        <div><span class="metric-label">PERSONAS</span><span class="metric-val">∞</span></div>
+        <div><span class="metric-label">PLATFORMS</span><span class="metric-val">5</span></div>
+        <div><span class="metric-label">ETA</span><span class="metric-val">Q3·26</span></div>
+      </div>
+      <a class="project-link" href="#" data-cursor="link">▸ UNRELEASED · COMING SOON</a>
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 03 — SKILL MATRIX
+     ═══════════════════════════════════════════════════════ -->
+<section class="section skills" id="skills">
+  <header class="section-header">
+    <div class="section-num">03 //</div>
+    <h2 class="section-title">SKILL MATRIX<span class="title-cursor"></span></h2>
+    <div class="section-line"></div>
+    <div class="section-meta">CAPABILITIES · BENCHMARKED · LIVE</div>
+  </header>
+  <div class="skills-grid">
+    <div class="skill brutal-card reveal" data-tilt>
+      <div class="skill-id">001</div>
+      <div class="skill-name">AI ENGINEERING</div>
+      <div class="skill-sub">Multi-orchestration · RAG · agents · prompt eng.</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="96"></div></div>
+      <div class="skill-pct" data-target="96">00%</div>
+      <div class="skill-stream"></div>
+    </div>
+    <div class="skill brutal-card reveal" data-tilt>
+      <div class="skill-id">002</div>
+      <div class="skill-name">FULL-STACK DEV</div>
+      <div class="skill-sub">React · TS · Workers · Node · Python · PHP</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="93"></div></div>
+      <div class="skill-pct" data-target="93">00%</div>
+      <div class="skill-stream"></div>
+    </div>
+    <div class="skill brutal-card reveal" data-tilt>
+      <div class="skill-id">003</div>
+      <div class="skill-name">AUTOMATION</div>
+      <div class="skill-sub">GH Actions · n8n · Cron · Pipelines · Webhooks</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="92"></div></div>
+      <div class="skill-pct" data-target="92">00%</div>
+      <div class="skill-stream"></div>
+    </div>
+    <div class="skill brutal-card reveal" data-tilt>
+      <div class="skill-id">004</div>
+      <div class="skill-name">UI / UX DESIGN</div>
+      <div class="skill-sub">Brutalism · cosmic motion · Tailwind · shadcn</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div>
+      <div class="skill-pct" data-target="90">00%</div>
+      <div class="skill-stream"></div>
+    </div>
+    <div class="skill brutal-card reveal" data-tilt>
+      <div class="skill-id">005</div>
+      <div class="skill-name">PROMPT ENG.</div>
+      <div class="skill-sub">Schema-locked · anti-tell · agentic chains</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="95"></div></div>
+      <div class="skill-pct" data-target="95">00%</div>
+      <div class="skill-stream"></div>
+    </div>
+    <div class="skill brutal-card reveal" data-tilt>
+      <div class="skill-id">006</div>
+      <div class="skill-name">DASHBOARD ENG.</div>
+      <div class="skill-sub">Charts · OOXML · live metrics · CSV pipelines</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="88"></div></div>
+      <div class="skill-pct" data-target="88">00%</div>
+      <div class="skill-stream"></div>
+    </div>
+    <div class="skill brutal-card reveal" data-tilt>
+      <div class="skill-id">007</div>
+      <div class="skill-name">VOICE SYSTEMS</div>
+      <div class="skill-sub">Whisper · Piper · wake-word · intent routing</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="82"></div></div>
+      <div class="skill-pct" data-target="82">00%</div>
+      <div class="skill-stream"></div>
+    </div>
+    <div class="skill brutal-card reveal" data-tilt>
+      <div class="skill-id">008</div>
+      <div class="skill-name">AI CONTENT</div>
+      <div class="skill-sub">60 posts/day · multimodal · brand-safe gen</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="94"></div></div>
+      <div class="skill-pct" data-target="94">00%</div>
+      <div class="skill-stream"></div>
+    </div>
+    <div class="skill brutal-card reveal" data-tilt>
+      <div class="skill-id">009</div>
+      <div class="skill-name">GROWTH SYSTEMS</div>
+      <div class="skill-sub">SEO at scale · ICP · loops · attribution</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="87"></div></div>
+      <div class="skill-pct" data-target="87">00%</div>
+      <div class="skill-stream"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 04 — TIMELINE / ROADMAP
+     ═══════════════════════════════════════════════════════ -->
+<section class="section timeline" id="timeline">
+  <header class="section-header">
+    <div class="section-num">04 //</div>
+    <h2 class="section-title">TIMELINE<span class="title-cursor"></span></h2>
+    <div class="section-line"></div>
+    <div class="section-meta">PAST · PRESENT · TRAJECTORY</div>
+  </header>
+  <div class="timeline-track">
+    <div class="timeline-line"></div>
+    <div class="timeline-item reveal" data-side="left">
+      <div class="timeline-marker"></div>
+      <div class="brutal-card timeline-card" data-tilt>
+        <div class="timeline-year">2024</div>
+        <div class="timeline-title">HACKKNOW.COM v1</div>
+        <p>Founded HACKKNOW as a curated digital marketplace. First 50 products. WordPress backbone, hand-rolled storefront. Lessons in CAC, payments, India-first UX.</p>
+        <div class="timeline-tag">▸ FOUNDED</div>
+      </div>
+    </div>
+    <div class="timeline-item reveal" data-side="right">
+      <div class="timeline-marker"></div>
+      <div class="brutal-card timeline-card" data-tilt>
+        <div class="timeline-year">2025 Q1</div>
+        <div class="timeline-title">YAHAVI AI BORN</div>
+        <p>Released first sales sensei in Hinglish. Multi-LLM routing across Groq + Gemini. Closed 4× more carts within 60 days of launch.</p>
+        <div class="timeline-tag tag-magenta">▸ AI LAYER</div>
+      </div>
+    </div>
+    <div class="timeline-item reveal" data-side="left">
+      <div class="timeline-marker"></div>
+      <div class="brutal-card timeline-card" data-tilt>
+        <div class="timeline-year">2025 Q3</div>
+        <div class="timeline-title">EDGE MIGRATION</div>
+        <p>Moved storefront + AI to Cloudflare Workers. 99.9% uptime. p50 latency &lt;180ms across India. WPGraphQL keeps WordPress as the source of truth.</p>
+        <div class="timeline-tag tag-cyan">▸ INFRA</div>
+      </div>
+    </div>
+    <div class="timeline-item reveal" data-side="right">
+      <div class="timeline-marker"></div>
+      <div class="brutal-card timeline-card" data-tilt>
+        <div class="timeline-year">2026 Q1</div>
+        <div class="timeline-title">YEXCEL LAUNCH</div>
+        <p>Shipped CSV → Excel dashboard generator in a single Worker. Free forever. Anti-paywall stance for Indian professionals.</p>
+        <div class="timeline-tag tag-green">▸ FREE TOOL</div>
+      </div>
+    </div>
+    <div class="timeline-item reveal" data-side="left">
+      <div class="timeline-marker timeline-marker-now"></div>
+      <div class="brutal-card timeline-card timeline-card-now" data-tilt>
+        <div class="timeline-year">2026 Q2 <span class="now-pulse">● NOW</span></div>
+        <div class="timeline-title">SCALING TO 1K</div>
+        <p>Catalog 396 → 1,000. Auto-blog cron live. Profile + showcase shipped (this page). Voice AI internal beta. 6 languages locked in for Q3.</p>
+        <div class="timeline-tag tag-orange">▸ CURRENT MISSION</div>
+      </div>
+    </div>
+    <div class="timeline-item reveal" data-side="right">
+      <div class="timeline-marker"></div>
+      <div class="brutal-card timeline-card timeline-card-future" data-tilt>
+        <div class="timeline-year">2026 Q3+</div>
+        <div class="timeline-title">AI INFLUENCER GRID</div>
+        <p>Autonomous synthetic persona network across 5 platforms. Veo + voice cloning + brand-safe content engines. India-first launch.</p>
+        <div class="timeline-tag">▸ TRAJECTORY</div>
+      </div>
+    </div>
+    <div class="timeline-item reveal" data-side="left">
+      <div class="timeline-marker"></div>
+      <div class="brutal-card timeline-card timeline-card-future" data-tilt>
+        <div class="timeline-year">2027</div>
+        <div class="timeline-title">HACKKNOW BECOMES OS</div>
+        <p>Marketplace → operating system for Indian SMBs. Voice + agents + Excel + storefront, all in one fabric.</p>
+        <div class="timeline-tag tag-magenta">▸ NORTH STAR</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 05 — VISION
+     ═══════════════════════════════════════════════════════ -->
+<section class="section vision" id="vision">
+  <div class="vision-rays"></div>
+  <header class="section-header center">
+    <div class="section-num">05 //</div>
+    <h2 class="section-title">VISION<span class="title-cursor"></span></h2>
+    <div class="section-line"></div>
+  </header>
+  <div class="vision-content">
+    <h3 class="vision-title">
+      <span class="v-line">WE ARE</span>
+      <span class="v-line v-line-accent">BUILDING</span>
+      <span class="v-line">THE FUTURE OF</span>
+      <span class="v-line v-line-accent v-line-mega">INTELLIGENT&nbsp;SYSTEMS</span>
+    </h3>
+    <p class="vision-para">
+      Not for Silicon Valley. <strong>For India.</strong> For the next 500 million professionals coming online with phones,
+      hindi keyboards, and a hunger to ship. We orchestrate intelligence — across models, across languages, across edges —
+      so that a single founder in Delhi can move at the speed of a fully-funded team. <strong>That asymmetry is the
+      product.</strong>
+    </p>
+    <div class="vision-pillars">
+      <div class="pillar brutal-card reveal" data-tilt>
+        <div class="pillar-num">I.</div>
+        <div class="pillar-title">SPEED IS A FEATURE</div>
+        <p>Every Indian professional deserves a 10× workflow by default. Not enterprise pricing. Not 30-day onboarding.</p>
+      </div>
+      <div class="pillar brutal-card reveal" data-tilt>
+        <div class="pillar-num">II.</div>
+        <div class="pillar-title">ORCHESTRATION &gt; SCALE</div>
+        <p>A small team that orchestrates four AI engines beats a large team with one. Conducting beats coding.</p>
+      </div>
+      <div class="pillar brutal-card reveal" data-tilt>
+        <div class="pillar-num">III.</div>
+        <div class="pillar-title">EDGE IS THE NEW CLOUD</div>
+        <p>180ms from Delhi to Mumbai to Bangalore. Stateless. Global. Yours. Cloudflare is the chassis.</p>
+      </div>
+      <div class="pillar brutal-card reveal" data-tilt>
+        <div class="pillar-num">IV.</div>
+        <div class="pillar-title">BUILD IN PUBLIC</div>
+        <p>If it's worth shipping it's worth showing. Code in the open. README first. Polish second. Talk third.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 06 — SOCIAL ECOSYSTEM
+     ═══════════════════════════════════════════════════════ -->
+<section class="section socials" id="socials">
+  <header class="section-header">
+    <div class="section-num">06 //</div>
+    <h2 class="section-title">UPLINK<span class="title-cursor"></span></h2>
+    <div class="section-line"></div>
+    <div class="section-meta">SIGNALS · CHANNELS · TRANSMIT</div>
+  </header>
+  <div class="socials-grid">
+    <a class="social brutal-card reveal" href="https://github.com/gaganchauhan1997" target="_blank" rel="noopener" data-tilt data-cursor="link">
+      <div class="social-glow"></div>
+      <div class="social-id">01</div>
+      <div class="social-name">GITHUB</div>
+      <div class="social-handle">@gaganchauhan1997</div>
+      <div class="social-arrow">↗</div>
+    </a>
+    <a class="social brutal-card reveal" href="https://linkedin.com/in/gaganchauhan1997" target="_blank" rel="noopener" data-tilt data-cursor="link">
+      <div class="social-glow social-glow-cyan"></div>
+      <div class="social-id">02</div>
+      <div class="social-name">LINKEDIN</div>
+      <div class="social-handle">/in/gaganchauhan1997</div>
+      <div class="social-arrow">↗</div>
+    </a>
+    <a class="social brutal-card reveal" href="https://twitter.com/hackknow" target="_blank" rel="noopener" data-tilt data-cursor="link">
+      <div class="social-glow social-glow-magenta"></div>
+      <div class="social-id">03</div>
+      <div class="social-name">X / TWITTER</div>
+      <div class="social-handle">@hackknow</div>
+      <div class="social-arrow">↗</div>
+    </a>
+    <a class="social brutal-card reveal" href="https://instagram.com/hackknow" target="_blank" rel="noopener" data-tilt data-cursor="link">
+      <div class="social-glow social-glow-orange"></div>
+      <div class="social-id">04</div>
+      <div class="social-name">INSTAGRAM</div>
+      <div class="social-handle">@hackknow</div>
+      <div class="social-arrow">↗</div>
+    </a>
+    <a class="social brutal-card reveal" href="https://youtube.com/@hackknow" target="_blank" rel="noopener" data-tilt data-cursor="link">
+      <div class="social-glow social-glow-magenta"></div>
+      <div class="social-id">05</div>
+      <div class="social-name">YOUTUBE</div>
+      <div class="social-handle">@hackknow</div>
+      <div class="social-arrow">↗</div>
+    </a>
+    <a class="social brutal-card reveal" href="https://hackknow.com" target="_blank" rel="noopener" data-tilt data-cursor="link">
+      <div class="social-glow"></div>
+      <div class="social-id">06</div>
+      <div class="social-name">WEBSITE</div>
+      <div class="social-handle">hackknow.com</div>
+      <div class="social-arrow">↗</div>
+    </a>
+    <a class="social brutal-card reveal" href="https://yexcel.hackknow.com" target="_blank" rel="noopener" data-tilt data-cursor="link">
+      <div class="social-glow social-glow-cyan"></div>
+      <div class="social-id">07</div>
+      <div class="social-name">YEXCEL</div>
+      <div class="social-handle">yexcel.hackknow.com</div>
+      <div class="social-arrow">↗</div>
+    </a>
+    <a class="social brutal-card reveal" href="mailto:hello@hackknow.com" data-tilt data-cursor="link">
+      <div class="social-glow social-glow-green"></div>
+      <div class="social-id">08</div>
+      <div class="social-name">EMAIL</div>
+      <div class="social-handle">hello@hackknow.com</div>
+      <div class="social-arrow">↗</div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════ -->
+<footer class="footer" id="footer">
+  <div class="footer-grid"></div>
+  <div class="footer-content">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <span class="logo-letter">H</span>
+        <span class="logo-slash">//</span>
+        <span class="logo-letter">K</span>
+      </div>
+      <div class="footer-name">HACKKNOW//OS</div>
+      <div class="footer-version">v2026.05.16 · KERNEL · MIT</div>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <div class="footer-col-title">▸ SYSTEMS</div>
+        <a href="https://hackknow.com" target="_blank" rel="noopener" data-cursor="link">hackknow.com</a>
+        <a href="https://yexcel.hackknow.com" target="_blank" rel="noopener" data-cursor="link">yexcel.hackknow.com</a>
+        <a href="https://yahavis.hackknow.com" target="_blank" rel="noopener" data-cursor="link">yahavis.hackknow.com</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">▸ SIGNALS</div>
+        <a href="https://github.com/gaganchauhan1997" target="_blank" rel="noopener" data-cursor="link">github</a>
+        <a href="https://linkedin.com/in/gaganchauhan1997" target="_blank" rel="noopener" data-cursor="link">linkedin</a>
+        <a href="https://twitter.com/hackknow" target="_blank" rel="noopener" data-cursor="link">x / twitter</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">▸ TRANSMIT</div>
+        <a href="mailto:hello@hackknow.com" data-cursor="link">hello@hackknow.com</a>
+        <a href="#" data-action="terminal" data-cursor="link">▸_ open terminal</a>
+        <a href="#" data-action="palette" data-cursor="link">⌘ command palette</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-terminal">
+      <span class="ft-prompt">$ gagan@hackknow:~$</span>
+      <span class="ft-cmd">next_project &amp;&amp; coffee &amp;&amp; ship</span>
+      <span class="mono-caret"></span>
+    </div>
+    <div class="footer-copy">
+      <span>BUILT IN PUBLIC ▪ FOR INDIA 🇮🇳 ▪ IN THE OPEN</span>
+      <span>© 2026 GAGAN CHAUHAN · HACKKNOW//OS · MIT</span>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════
+     TERMINAL MODAL
+     ═══════════════════════════════════════════════════════ -->
+<div class="terminal-overlay" id="terminal-overlay" aria-hidden="true">
+  <div class="terminal-window" role="dialog" aria-modal="true" aria-label="HACKKNOW//OS terminal">
+    <div class="terminal-bar">
+      <div class="terminal-dots">
+        <span class="t-dot t-dot-red"></span>
+        <span class="t-dot t-dot-yellow"></span>
+        <span class="t-dot t-dot-green"></span>
+      </div>
+      <div class="terminal-title">▸_ gagan@hackknow:~ — HK//SHELL v2.6 — 80×24</div>
+      <button class="terminal-close" data-action="close-terminal" aria-label="Close terminal" data-cursor="button">×</button>
+    </div>
+    <div class="terminal-body" id="terminal-body"></div>
+    <div class="terminal-input-line">
+      <span class="terminal-prompt">▸ gagan@hk</span>
+      <span class="terminal-sep">:~$</span>
+      <input id="terminal-input" class="terminal-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="type 'help' and hit ↵" />
+      <span class="terminal-caret"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     COMMAND PALETTE
+     ═══════════════════════════════════════════════════════ -->
+<div class="palette-overlay" id="palette-overlay" aria-hidden="true">
+  <div class="palette" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="palette-bar">
+      <div class="palette-icon">⌘</div>
+      <input id="palette-input" class="palette-input" placeholder="Search systems · jump to · run command..." autocomplete="off" />
+      <div class="palette-esc">ESC</div>
+    </div>
+    <div class="palette-list" id="palette-list"></div>
+    <div class="palette-footer">
+      <span>↑↓ navigate</span>
+      <span>↵ select</span>
+      <span>ESC close</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     CINEMATIC OVERLAY
+     ═══════════════════════════════════════════════════════ -->
+<div class="cinematic-overlay" id="cinematic-overlay" aria-hidden="true">
+  <div class="cine-bar cine-bar-top"></div>
+  <div class="cine-bar cine-bar-bottom"></div>
+  <div class="cine-caption">▸ CINEMATIC MODE · SHIFT+SPACE TO EXIT</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
