@@ -31,6 +31,7 @@
     <button class="nav-tab" data-page="roast">ROAST</button>
     <button class="nav-tab" data-page="tailor">TAILOR</button>
     <button class="nav-tab" data-page="prep">PREP</button>
+    <button class="nav-tab" data-page="portfolio">PORTFOLIO</button>
     <button class="nav-tab" data-page="gap">GAP/QUICK</button>
   </div>
 
@@ -120,11 +121,11 @@
       <div class="feature-cta">FORGE ▸</div>
     </div>
 
-    <div class="feature-card" data-goto="builder">
-      <div class="feature-num">+ MORE</div>
-      <div class="feature-title">Coming Soon</div>
-      <div class="feature-desc">Recruiter Heatmap · Salary Estimator · LinkedIn Import · Portfolio Generator · Multi-Language Resume · Voice-Guided Mode.</div>
-      <div class="feature-cta">ROADMAP ▸</div>
+    <div class="feature-card dark" data-goto="portfolio">
+      <div class="feature-num">08 / PORTFOLIO</div>
+      <div class="feature-title">Portfolio Generator</div>
+      <div class="feature-desc">Resume → standalone HTML portfolio webpage in 5 design themes (Editorial · Brutalist · Minimal · Terminal · Luxury). Download or print.</div>
+      <div class="feature-cta">FORGE A SITE ▸</div>
     </div>
   </div>
 
@@ -201,7 +202,9 @@
 
       <div class="btn-row">
         <button class="btn btn-primary" id="rb-go">▸ FORGE ACHIEVEMENTS</button>
-        <button class="btn btn-ghost" data-copy="rb-output">⧉ COPY OUTPUT</button>
+        <button class="btn btn-ghost" data-copy="rb-output">⧉ COPY</button>
+        <button class="btn btn-ghost" data-pdf="rb-output|Achievement Bullets">↓ PDF</button>
+        <button class="btn btn-ghost" data-html="rb-output|Achievement Bullets|yahavi-achievements.html">↓ HTML</button>
       </div>
     </div>
 
@@ -247,7 +250,9 @@
 
   <div class="btn-row" style="margin-bottom: 24px;">
     <button class="btn btn-primary" id="ats-go">▸ RUN ATS SIMULATION</button>
-    <button class="btn btn-ghost" data-copy="ats-output">⧉ COPY REPORT</button>
+    <button class="btn btn-ghost" data-copy="ats-output">⧉ COPY</button>
+    <button class="btn btn-ghost" data-pdf="ats-output|ATS Report">↓ PDF</button>
+    <button class="btn btn-ghost" data-html="ats-output|ATS Report|yahavi-ats-report.html">↓ HTML</button>
   </div>
 
   <div class="panel">
@@ -284,7 +289,9 @@
       </div>
       <div class="btn-row">
         <button class="btn btn-pink" id="roast-go">▸ LIGHT IT UP</button>
-        <button class="btn btn-ghost" data-copy="roast-output">⧉ COPY ROAST</button>
+        <button class="btn btn-ghost" data-copy="roast-output">⧉ COPY</button>
+        <button class="btn btn-ghost" data-pdf="roast-output|Resume Roast">↓ PDF</button>
+        <button class="btn btn-ghost" data-html="roast-output|Resume Roast|yahavi-roast.html">↓ HTML</button>
       </div>
     </div>
 
@@ -326,7 +333,9 @@
 
   <div class="btn-row" style="margin-bottom: 24px;">
     <button class="btn btn-lime" id="tailor-go">▸ TAILOR IT</button>
-    <button class="btn btn-ghost" data-copy="tailor-output">⧉ COPY TAILORED</button>
+    <button class="btn btn-ghost" data-copy="tailor-output">⧉ COPY</button>
+    <button class="btn btn-ghost" data-pdf="tailor-output|Tailored Resume">↓ PDF</button>
+    <button class="btn btn-ghost" data-html="tailor-output|Tailored Resume|yahavi-tailored-resume.html">↓ HTML</button>
   </div>
 
   <div class="panel">
@@ -363,6 +372,8 @@
       <div class="btn-row">
         <button class="btn btn-primary" id="prep-go">▸ BUILD PREP PACK</button>
         <button class="btn btn-ghost" data-copy="prep-output" style="background: var(--paper);">⧉ COPY</button>
+        <button class="btn btn-ghost" data-pdf="prep-output|Interview Prep Pack" style="background: var(--paper);">↓ PDF</button>
+        <button class="btn btn-ghost" data-html="prep-output|Interview Prep Pack|yahavi-interview-prep.html" style="background: var(--paper);">↓ HTML</button>
       </div>
     </div>
 
@@ -370,6 +381,71 @@
       <div class="panel-label"><span>▸ PREP PACK</span><span class="badge">12 Qs + STAR</span></div>
       <div class="output-area" id="prep-output">
         <div class="output-empty">▸ Your interview prep pack will appear here</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================
+     MODULE 8: PORTFOLIO WEBPAGE GENERATOR
+     ============================================ -->
+<section class="page" id="page-portfolio">
+
+  <div class="section-head">
+    <div class="section-title"><span class="num">08</span>Portfolio Generator</div>
+    <div class="section-meta">Resume → standalone HTML webpage · 5 design themes</div>
+  </div>
+
+  <div class="module-grid">
+    <div class="panel">
+      <div class="panel-label"><span>▸ INPUT</span><span class="badge">YOU</span></div>
+
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input type="text" id="port-name" placeholder="e.g. Gagan Chauhan" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Headline / Title</label>
+        <input type="text" id="port-headline" placeholder="e.g. AI Full Stack Developer · Founder of Hackknow" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Links (one per line)</label>
+        <textarea id="port-links" rows="4" placeholder="GitHub: github.com/yourname
+LinkedIn: linkedin.com/in/yourname
+Email: you@domain.com
+Twitter: @yourhandle"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Design Theme</label>
+        <select id="port-style">
+          <option value="editorial">▸ EDITORIAL — Magazine-style serif</option>
+          <option value="brutalist">▸ BRUTALIST — Bold yellow + pink + hard shadows</option>
+          <option value="minimal">▸ MINIMAL — Swiss whitespace, monochrome</option>
+          <option value="terminal">▸ TERMINAL — Dark dev/hacker aesthetic</option>
+          <option value="luxury">▸ LUXURY — Fashion house, gold accents</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Full Resume Content</label>
+        <textarea id="port-resume" rows="12" placeholder="Paste your full resume here — about, experience, skills, projects, education, everything. Yahavi will structure it into a beautiful standalone webpage."></textarea>
+        <div class="input-hint">▸ The more you paste, the richer the page</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="port-go">▸ FORGE PORTFOLIO</button>
+      </div>
+    </div>
+
+    <div class="panel dark">
+      <div class="panel-label"><span>▸ LIVE PREVIEW</span><span class="badge">DOWNLOADABLE</span></div>
+
+      <div class="output-area" id="port-output" style="background: var(--paper); color: var(--ink); min-height: 600px;">
+        <div class="output-empty">▸ Your standalone portfolio webpage will appear here as a live preview, ready to download as .html</div>
       </div>
     </div>
   </div>
@@ -406,6 +482,7 @@
       <div class="btn-row">
         <button class="btn" id="gap-go">▸ REFRAME</button>
         <button class="btn btn-ghost" data-copy="gap-output">⧉ COPY</button>
+        <button class="btn btn-ghost" data-pdf="gap-output|Career Gap Framing">↓ PDF</button>
       </div>
 
       <div style="margin-top: 18px;">
@@ -426,6 +503,7 @@
       <div class="btn-row">
         <button class="btn" id="ach-go">▸ FORGE 3 VARIANTS</button>
         <button class="btn btn-ghost" data-copy="ach-output">⧉ COPY</button>
+        <button class="btn btn-ghost" data-pdf="ach-output|Achievement Variants">↓ PDF</button>
       </div>
 
       <div style="margin-top: 18px;">

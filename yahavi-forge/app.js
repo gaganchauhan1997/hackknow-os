@@ -111,15 +111,40 @@ async function aiCall(messages, options = {}) {
       const result = await callProvider(id, messages, options);
       return { result, provider: id };
     } catch (e) {
-      errors.push(`${id}: ${e.message}`);
+      errors.push({ id, msg: e.message, status: e.status });
       continue;
     }
   }
 
   if (errors.length === 0) {
-    throw new Error('No API keys configured. Open settings and paste at least one free key.');
+    throw new Error('▸ NO API KEYS CONFIGURED\n\nOpen the ▸ KEYS panel (top right) and paste at least one free API key.\n\nFastest path: Get a Groq key (60 sec) at console.groq.com/keys');
   }
-  throw new Error('All providers failed:\n' + errors.join('\n'));
+
+  // Friendlier composite error
+  const summary = errors.map(e => {
+    const p = PROVIDERS[e.id]?.name || e.id;
+    if (e.status === 401 || /401|invalid.{0,20}key|unauthorized/i.test(e.msg)) {
+      return `▸ ${p}: API KEY INVALID — re-generate at ${PROVIDERS[e.id]?.keyUrl}`;
+    }
+    if (e.status === 429 || /429|rate.?limit|quota/i.test(e.msg)) {
+      return `▸ ${p}: RATE LIMITED — wait a minute, or add another provider as backup`;
+    }
+    if (e.status === 403 || /403|forbidden/i.test(e.msg)) {
+      return `▸ ${p}: ACCESS DENIED — key may need billing/verification at ${PROVIDERS[e.id]?.keyUrl}`;
+    }
+    if (e.status === 404 || /404|model.{0,20}not.{0,20}found/i.test(e.msg)) {
+      return `▸ ${p}: MODEL UNAVAILABLE — provider may have deprecated this model`;
+    }
+    if (/network|fetch|CORS|failed to fetch/i.test(e.msg)) {
+      return `▸ ${p}: NETWORK ERROR — check connection or browser ad-blocker`;
+    }
+    return `▸ ${p}: ${e.msg.slice(0, 160)}`;
+  }).join('\n');
+
+  const hint = errors.length === 1
+    ? '\n\nFix the issue above OR add another provider as fallback in ▸ KEYS.'
+    : '\n\nAll your configured providers failed. Check keys in ▸ KEYS.';
+  throw new Error(summary + hint);
 }
 
 async function callProvider(id, messages, options) {
@@ -144,7 +169,9 @@ async function callProvider(id, messages, options) {
     });
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+      const err = new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+      err.status = res.status;
+      throw err;
     }
     const data = await res.json();
     return data.choices?.[0]?.message?.content || '';
@@ -186,7 +213,9 @@ async function callProvider(id, messages, options) {
           return data2.candidates?.[0]?.content?.parts?.[0]?.text || '';
         }
       }
-      throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+      const err = new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+      err.status = res.status;
+      throw err;
     }
     const data = await res.json();
     return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
@@ -211,7 +240,9 @@ async function callProvider(id, messages, options) {
     });
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+      const err = new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
+      err.status = res.status;
+      throw err;
     }
     const data = await res.json();
     return data.message?.content?.[0]?.text || '';
@@ -221,34 +252,61 @@ async function callProvider(id, messages, options) {
 }
 
 /* ============================================
-   MARKDOWN → HTML (lightweight)
+   MARKDOWN → HTML (robust)
+   Handles: # headers · **bold** · __bold__ · *italic* · _italic_
+            `code` · ---  · - * + bullets · 1. numbered · > quotes
    ============================================ */
 function md(text) {
   if (!text) return '';
+  // Escape HTML
   let html = text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
-  // Code spans
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-  // Bold
-  html = html.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+  // Code spans (do first so they don't interfere with bold/italic)
+  html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+
+  // Bold — handle ** and __ (must be done before italic)
+  html = html.replace(/\*\*([^\*\n]+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/__([^_\n]+?)__/g, '<strong>$1</strong>');
+
+  // Italic — handle * and _ (single chars, won't match the doubled versions above)
+  // Negative lookbehind/ahead to avoid matching mid-word underscores
+  html = html.replace(/(?<![\w*])\*([^\*\n]+?)\*(?![\w*])/g, '<em>$1</em>');
+  html = html.replace(/(?<![\w_])_([^_\n]+?)_(?![\w_])/g, '<em>$1</em>');
+
   // Headers
-  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-  // Horizontal rule
-  html = html.replace(/^---+$/gm, '<hr>');
-  // Lists
-  html = html.replace(/^(?:[\*\-]) (.+)$/gm, '<li>$1</li>');
-  html = html.replace(/((?:<li>.*<\/li>\s*)+)/g, '<ul>$1</ul>');
-  // Numbered lists
-  html = html.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+  html = html.replace(/^### +(.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## +(.+)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# +(.+)$/gm, '<h1>$1</h1>');
+
+  // Horizontal rules
+  html = html.replace(/^[\-\*_]{3,}\s*$/gm, '<hr>');
+
+  // Blockquotes
+  html = html.replace(/^> +(.+)$/gm, '<blockquote>$1</blockquote>');
+
+  // Unordered list items — accept -, *, +, or • as bullet markers
+  html = html.replace(/^[ \t]*[\-\*\+•] +(.+)$/gm, '<li data-bullet="u">$1</li>');
+
+  // Ordered list items
+  html = html.replace(/^[ \t]*\d+\. +(.+)$/gm, '<li data-bullet="o">$1</li>');
+
+  // Wrap consecutive <li> in <ul> or <ol>
+  html = html.replace(/(<li data-bullet="u">[\s\S]*?<\/li>)(?:\n*(<li data-bullet="u">[\s\S]*?<\/li>))+/g,
+    (m) => '<ul>' + m.replace(/ data-bullet="u"/g, '') + '</ul>');
+  html = html.replace(/(<li data-bullet="o">[\s\S]*?<\/li>)(?:\n*(<li data-bullet="o">[\s\S]*?<\/li>))+/g,
+    (m) => '<ol>' + m.replace(/ data-bullet="o"/g, '') + '</ol>');
+  // Single-item lists
+  html = html.replace(/<li data-bullet="u">([\s\S]*?)<\/li>/g, '<ul><li>$1</li></ul>');
+  html = html.replace(/<li data-bullet="o">([\s\S]*?)<\/li>/g, '<ol><li>$1</li></ol>');
+
   // Paragraphs (lines not already in tags)
   html = html.split(/\n\n+/).map(block => {
-    if (/^<(h\d|ul|ol|li|hr|p|pre|blockquote)/.test(block.trim())) return block;
+    const trimmed = block.trim();
+    if (!trimmed) return '';
+    if (/^<(h\d|ul|ol|li|hr|p|pre|blockquote|div)/.test(trimmed)) return block;
     return '<p>' + block.replace(/\n/g, '<br>') + '</p>';
   }).join('\n');
 
@@ -282,6 +340,28 @@ function renderOutput(outputEl, text, providerUsed) {
     ? `<div style="font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-faint); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dotted var(--ink);">▸ Generated by ${PROVIDERS[providerUsed]?.name || providerUsed}</div>`
     : '';
   outputEl.innerHTML = providerBadge + md(text);
+  // Stash raw text on the element for exports
+  outputEl.dataset.rawOutput = text;
+  outputEl.dataset.provider = providerUsed || '';
+}
+
+function renderError(outputEl, message) {
+  outputEl.classList.add('has-content');
+  const escaped = String(message)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\n/g, '<br>');
+  outputEl.innerHTML = `
+    <div style="border: 3px solid var(--pink); background: rgba(255,46,99,0.08); padding: 18px;">
+      <div style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--pink); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+        <span style="display: inline-block; width: 10px; height: 10px; background: var(--pink);"></span>
+        ERROR · YAHAVI COULDN'T FORGE
+      </div>
+      <div style="font-family: var(--font-mono); font-size: 12.5px; line-height: 1.65; color: var(--ink);">${escaped}</div>
+    </div>
+  `;
+  delete outputEl.dataset.rawOutput;
 }
 
 function setBusy(btn, isBusy, originalText) {
@@ -436,9 +516,8 @@ Generate the achievement bullets now.`;
     renderOutput(outputEl, result, provider);
     toast('Achievements forged ✓', 'success');
   } catch (e) {
-    outputEl.classList.remove('has-content');
-    outputEl.innerHTML = `<div class="output-empty" style="color: var(--pink);">⚠ ${e.message}</div>`;
-    toast(e.message, 'error');
+    renderError(outputEl, e.message);
+    toast('FAILED — see output panel', 'error');
   } finally {
     setBusy(btn, false);
   }
@@ -521,9 +600,8 @@ Score and analyze now.`;
     outputEl.innerHTML = html;
     toast(score !== null ? `Score: ${score}/100` : 'ATS analysis done', 'success');
   } catch (e) {
-    outputEl.classList.remove('has-content');
-    outputEl.innerHTML = `<div class="output-empty" style="color: var(--pink);">⚠ ${e.message}</div>`;
-    toast(e.message, 'error');
+    renderError(outputEl, e.message);
+    toast('FAILED — see output panel', 'error');
   } finally {
     setBusy(btn, false);
   }
@@ -590,9 +668,8 @@ Roast away. Don't hold back.`;
     renderOutput(outputEl, result, provider);
     toast('Roasted to perfection 🔥', 'success');
   } catch (e) {
-    outputEl.classList.remove('has-content');
-    outputEl.innerHTML = `<div class="output-empty" style="color: var(--pink);">⚠ ${e.message}</div>`;
-    toast(e.message, 'error');
+    renderError(outputEl, e.message);
+    toast('FAILED — see output panel', 'error');
   } finally {
     setBusy(btn, false);
   }
@@ -656,9 +733,8 @@ Tailor it now. Maximum match, zero invention.`;
     renderOutput(outputEl, result, provider);
     toast('Resume tailored ✓', 'success');
   } catch (e) {
-    outputEl.classList.remove('has-content');
-    outputEl.innerHTML = `<div class="output-empty" style="color: var(--pink);">⚠ ${e.message}</div>`;
-    toast(e.message, 'error');
+    renderError(outputEl, e.message);
+    toast('FAILED — see output panel', 'error');
   } finally {
     setBusy(btn, false);
   }
@@ -720,9 +796,8 @@ Generate the prep pack now.`;
     renderOutput(outputEl, result, provider);
     toast('Prep pack ready 🎯', 'success');
   } catch (e) {
-    outputEl.classList.remove('has-content');
-    outputEl.innerHTML = `<div class="output-empty" style="color: var(--pink);">⚠ ${e.message}</div>`;
-    toast(e.message, 'error');
+    renderError(outputEl, e.message);
+    toast('FAILED — see output panel', 'error');
   } finally {
     setBusy(btn, false);
   }
@@ -780,9 +855,8 @@ ${gap}`;
     renderOutput(outputEl, result, provider);
     toast('Story reframed ✓', 'success');
   } catch (e) {
-    outputEl.classList.remove('has-content');
-    outputEl.innerHTML = `<div class="output-empty" style="color: var(--pink);">⚠ ${e.message}</div>`;
-    toast(e.message, 'error');
+    renderError(outputEl, e.message);
+    toast('FAILED — see output panel', 'error');
   } finally {
     setBusy(btn, false);
   }
@@ -827,9 +901,8 @@ Transform into 3 strong variants now.`;
     renderOutput(outputEl, result, provider);
     toast('Achievement forged ⚡', 'success');
   } catch (e) {
-    outputEl.classList.remove('has-content');
-    outputEl.innerHTML = `<div class="output-empty" style="color: var(--pink);">⚠ ${e.message}</div>`;
-    toast(e.message, 'error');
+    renderError(outputEl, e.message);
+    toast('FAILED — see output panel', 'error');
   } finally {
     setBusy(btn, false);
   }
@@ -848,6 +921,254 @@ async function copyOutput(outputId) {
     toast('Copy failed — select manually', 'error');
   }
 }
+
+/* ============================================
+   EXPORT — PDF (via print)
+   ============================================ */
+function exportPDF(outputId, title) {
+  const el = $('#' + outputId);
+  const raw = el.dataset.rawOutput;
+  if (!raw && !el.innerHTML.trim()) {
+    toast('Nothing to export yet — run the module first', 'error');
+    return;
+  }
+  const contentHtml = raw ? md(raw) : el.innerHTML;
+  const documentTitle = title || 'Yahavi Forge Output';
+  const provider = el.dataset.provider ? PROVIDERS[el.dataset.provider]?.name : '';
+
+  const win = window.open('', '_blank', 'width=900,height=1100');
+  if (!win) {
+    toast('Pop-up blocked — allow pop-ups for PDF export', 'error');
+    return;
+  }
+  win.document.write(buildPrintDoc(documentTitle, contentHtml, provider));
+  win.document.close();
+  // Wait for fonts to load before printing
+  setTimeout(() => {
+    try {
+      win.focus();
+      win.print();
+    } catch (e) { /* ignore */ }
+  }, 600);
+  toast('Opening print dialog → save as PDF', 'success');
+}
+
+function buildPrintDoc(title, contentHtml, provider) {
+  return `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>${title}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; color: #1a1714; line-height: 1.55; background: #faf7f2; padding: 32px; margin: 0; }
+  .doc { max-width: 720px; margin: 0 auto; }
+  .doc-head { border-bottom: 2px solid #1a1714; padding-bottom: 14px; margin-bottom: 22px; }
+  .doc-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: #b8420f; margin-bottom: 8px; }
+  .doc-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 32px; letter-spacing: -0.02em; line-height: 1.05; color: #1a1714; }
+  .doc-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #8a8275; margin-top: 8px; }
+  .doc-content { font-size: 14px; }
+  .doc-content h1 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px; margin: 18px 0 8px; letter-spacing: -0.015em; color: #1a1714; }
+  .doc-content h2 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px; margin: 16px 0 6px; color: #1a1714; }
+  .doc-content h3 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 15px; margin: 14px 0 4px; color: #1a1714; }
+  .doc-content p { margin-bottom: 10px; }
+  .doc-content ul, .doc-content ol { margin: 8px 0 12px 20px; }
+  .doc-content li { margin-bottom: 4px; }
+  .doc-content strong { font-weight: 600; color: #b8420f; }
+  .doc-content em { font-style: italic; color: #4a4239; }
+  .doc-content code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: #efe6d8; padding: 1px 4px; }
+  .doc-content hr { border: none; border-top: 1px solid #d8cfc0; margin: 14px 0; }
+  .doc-footer { margin-top: 32px; padding-top: 14px; border-top: 1px solid #d8cfc0; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #8a8275; display: flex; justify-content: space-between; }
+  @media print { body { background: white; padding: 0; } .doc-footer { page-break-inside: avoid; } }
+</style></head>
+<body>
+<div class="doc">
+  <div class="doc-head">
+    <div class="doc-eyebrow">▸ YAHAVI FORGE · AI CAREER OS</div>
+    <h1 class="doc-title">${title}</h1>
+    <div class="doc-meta">Generated ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}${provider ? ' · via ' + provider : ''}</div>
+  </div>
+  <div class="doc-content">${contentHtml}</div>
+  <div class="doc-footer">
+    <span>YAHAVI FORGE · BY HACKKNOW</span>
+    <span>"FREE INTELLIGENCE, INFINITE CAPABILITY."</span>
+  </div>
+</div>
+</body></html>`;
+}
+
+/* ============================================
+   EXPORT — HTML (download standalone webpage)
+   ============================================ */
+function exportHTML(outputId, title, filename) {
+  const el = $('#' + outputId);
+  const raw = el.dataset.rawOutput;
+  if (!raw && !el.innerHTML.trim()) {
+    toast('Nothing to export yet — run the module first', 'error');
+    return;
+  }
+  const contentHtml = raw ? md(raw) : el.innerHTML;
+  const documentTitle = title || 'Yahavi Forge Output';
+  const provider = el.dataset.provider ? PROVIDERS[el.dataset.provider]?.name : '';
+  const html = buildPrintDoc(documentTitle, contentHtml, provider);
+  downloadFile(html, filename || 'yahavi-forge-output.html', 'text/html');
+  toast('▸ HTML downloaded', 'success');
+}
+
+function downloadFile(content, filename, mime) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* ============================================
+   MODULE 8: PORTFOLIO WEBPAGE GENERATOR
+   ============================================ */
+async function runPortfolio() {
+  const name = $('#port-name').value.trim();
+  const headline = $('#port-headline').value.trim();
+  const resume = $('#port-resume').value.trim();
+  const links = $('#port-links').value.trim();
+  const style = $('#port-style').value;
+  const outputEl = $('#port-output');
+  const btn = $('#port-go');
+
+  if (!name || !resume) {
+    toast('Need at least your name and resume content', 'error');
+    return;
+  }
+
+  setBusy(btn, true);
+  showLoading(outputEl, 'Forging your portfolio');
+
+  const styleHint = {
+    editorial: 'editorial magazine aesthetic with refined serif typography (Fraunces) and warm paper background',
+    brutalist: 'brutalist neo-design with bold Archivo Black headlines, off-white paper, hard 6px shadows, electric yellow + hot pink accents',
+    minimal: 'ultra-minimal Swiss design with generous whitespace, single sans-serif (Inter), monochrome with one accent',
+    terminal: 'dark terminal/developer aesthetic with monospace (JetBrains Mono), green/cyan accents on near-black',
+    luxury: 'luxury fashion-house aesthetic with thin elegant serif, gold accents, deep contrast'
+  }[style] || 'clean editorial style';
+
+  const sys = `You are Yahavi Forge — a world-class web designer. Produce ONLY raw HTML for a standalone portfolio webpage (single file, all CSS embedded in <style>, no external dependencies except Google Fonts <link>). The HTML must be complete, valid, and ready to save as .html.
+
+REQUIRED STYLE: ${styleHint}
+
+PAGE REQUIREMENTS:
+- Sticky hero with name + headline + 1-line tagline
+- About section (3-4 sentences from the resume)
+- Skills section (chips/badges)
+- Experience section (timeline-style with company, role, date, 3-4 achievement bullets each)
+- Projects section if present in resume
+- Education section
+- Contact section with links provided
+- Footer with name and year
+- Fully responsive (mobile-first works)
+- Print-friendly (@media print rules)
+- Semantic HTML5 (<header>, <main>, <section>, <footer>)
+- Accessibility (alt text, contrast)
+
+OUTPUT FORMAT: Return ONLY the complete HTML document, starting with <!DOCTYPE html> and ending with </html>. NO explanation, NO markdown fences, NO commentary. Just the HTML.`;
+
+  const user = `Build a portfolio website for:
+
+NAME: ${name}
+HEADLINE: ${headline || 'Professional'}
+
+LINKS:
+${links || '(none provided)'}
+
+RESUME CONTENT:
+${resume}
+
+Generate the complete standalone HTML now.`;
+
+  try {
+    const { result, provider } = await aiCall(
+      [{ role: 'system', content: sys }, { role: 'user', content: user }],
+      { temperature: 0.5, max_tokens: 8192 }
+    );
+
+    // Strip markdown fences if AI added them anyway
+    let html = result.trim();
+    html = html.replace(/^```(?:html)?\n?/i, '').replace(/\n?```\s*$/i, '');
+
+    // Validate it starts with <!DOCTYPE or <html
+    if (!/^<!DOCTYPE|^<html/i.test(html)) {
+      // Try to find a DOCTYPE within the response
+      const match = html.match(/<!DOCTYPE html[\s\S]+<\/html>/i);
+      if (match) html = match[0];
+    }
+
+    // Stash for export
+    outputEl.dataset.rawOutput = html;
+    outputEl.dataset.provider = provider;
+    outputEl.classList.add('has-content');
+
+    // Show preview with iframe + actions
+    const safeName = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'portfolio';
+    outputEl.innerHTML = `
+      <div style="font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-faint); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dotted var(--ink);">
+        ▸ PORTFOLIO READY · GENERATED BY ${PROVIDERS[provider]?.name || provider} · ${(html.length/1024).toFixed(1)}KB
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;">
+        <button class="btn btn-primary" onclick="downloadPortfolio('${safeName}')">▸ DOWNLOAD HTML</button>
+        <button class="btn btn-pink" onclick="previewPortfolioNewTab()">▸ OPEN IN NEW TAB</button>
+        <button class="btn btn-ghost" onclick="printPortfolio()">▸ PRINT / PDF</button>
+      </div>
+      <iframe id="port-preview" sandbox="allow-same-origin" style="width: 100%; height: 520px; border: var(--border); background: #fff;"></iframe>
+    `;
+    const iframe = $('#port-preview');
+    iframe.srcdoc = html;
+
+    toast('Portfolio forged ✓', 'success');
+  } catch (e) {
+    renderError(outputEl, e.message);
+    toast('FAILED — see output', 'error');
+  } finally {
+    setBusy(btn, false);
+  }
+}
+
+function downloadPortfolio(safeName) {
+  const el = $('#port-output');
+  const html = el.dataset.rawOutput;
+  if (!html) { toast('No portfolio to download', 'error'); return; }
+  downloadFile(html, `${safeName}-portfolio.html`, 'text/html');
+  toast('▸ Portfolio downloaded', 'success');
+}
+
+function previewPortfolioNewTab() {
+  const el = $('#port-output');
+  const html = el.dataset.rawOutput;
+  if (!html) return;
+  const win = window.open('', '_blank');
+  if (!win) { toast('Pop-up blocked', 'error'); return; }
+  win.document.write(html);
+  win.document.close();
+}
+
+function printPortfolio() {
+  const el = $('#port-output');
+  const html = el.dataset.rawOutput;
+  if (!html) return;
+  const win = window.open('', '_blank', 'width=900,height=1100');
+  if (!win) { toast('Pop-up blocked', 'error'); return; }
+  win.document.write(html);
+  win.document.close();
+  setTimeout(() => { try { win.focus(); win.print(); } catch (e) {} }, 600);
+}
+
+// Expose globals for inline onclick
+window.downloadPortfolio = downloadPortfolio;
+window.previewPortfolioNewTab = previewPortfolioNewTab;
+window.printPortfolio = printPortfolio;
 
 /* ============================================
    INIT
@@ -910,9 +1231,29 @@ function bindModules() {
   // Achievement Generator
   $('#ach-go').addEventListener('click', runAchievement);
 
+  // Portfolio Generator
+  const portBtn = $('#port-go');
+  if (portBtn) portBtn.addEventListener('click', runPortfolio);
+
   // Copy buttons
   $$('[data-copy]').forEach(btn => {
     btn.addEventListener('click', () => copyOutput(btn.dataset.copy));
+  });
+
+  // PDF export buttons
+  $$('[data-pdf]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const [outputId, title] = btn.dataset.pdf.split('|');
+      exportPDF(outputId, title);
+    });
+  });
+
+  // HTML export buttons
+  $$('[data-html]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const [outputId, title, filename] = btn.dataset.html.split('|');
+      exportHTML(outputId, title, filename);
+    });
   });
 }
 
