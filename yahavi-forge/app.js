@@ -159,6 +159,10 @@ async function callProvider(id, messages, options) {
       temperature,
       max_tokens: options.max_tokens || 2048
     };
+    // JSON mode for providers that support it
+    if (options.json_mode && (id === 'groq' || id === 'openrouter' || id === 'mistral' || id === 'together')) {
+      body.response_format = { type: 'json_object' };
+    }
     const res = await fetch(p.url, {
       method: 'POST',
       headers: {
@@ -191,6 +195,7 @@ async function callProvider(id, messages, options) {
         maxOutputTokens: options.max_tokens || 2048
       }
     };
+    if (options.json_mode) body.generationConfig.responseMimeType = 'application/json';
     if (sys) body.systemInstruction = { parts: [{ text: sys.content }] };
 
     const url = `${p.url}?key=${encodeURIComponent(key)}`;
@@ -928,11 +933,11 @@ async function copyOutput(outputId) {
 function exportPDF(outputId, title) {
   const el = $('#' + outputId);
   const raw = el.dataset.rawOutput;
-  if (!raw && !el.innerHTML.trim()) {
-    toast('Nothing to export yet — run the module first', 'error');
+  if (!raw) {
+    toast('No successful output yet — run the module first', 'error');
     return;
   }
-  const contentHtml = raw ? md(raw) : el.innerHTML;
+  const contentHtml = md(raw);
   const documentTitle = title || 'Yahavi Forge Output';
   const provider = el.dataset.provider ? PROVIDERS[el.dataset.provider]?.name : '';
 
@@ -1004,11 +1009,11 @@ function buildPrintDoc(title, contentHtml, provider) {
 function exportHTML(outputId, title, filename) {
   const el = $('#' + outputId);
   const raw = el.dataset.rawOutput;
-  if (!raw && !el.innerHTML.trim()) {
-    toast('Nothing to export yet — run the module first', 'error');
+  if (!raw) {
+    toast('No successful output yet — run the module first', 'error');
     return;
   }
-  const contentHtml = raw ? md(raw) : el.innerHTML;
+  const contentHtml = md(raw);
   const documentTitle = title || 'Yahavi Forge Output';
   const provider = el.dataset.provider ? PROVIDERS[el.dataset.provider]?.name : '';
   const html = buildPrintDoc(documentTitle, contentHtml, provider);
@@ -1205,8 +1210,12 @@ function bindModules() {
     });
   });
 
-  // ATS
-  $('#ats-go').addEventListener('click', runAtsOptimizer);
+  // ATS — Career Intelligence Report (v3)
+  const atsBtn = $('#ats-go');
+  if (atsBtn) atsBtn.addEventListener('click', () => {
+    if (window.runReport) window.runReport();
+    else runAtsOptimizer();
+  });
 
   // Roast
   $('#roast-go').addEventListener('click', runRoast);

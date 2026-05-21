@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="report.css" />
 </head>
 <body>
 
@@ -223,42 +224,41 @@
 </section>
 
 <!-- ============================================
-     MODULE 2: ATS OPTIMIZER
+     MODULE 2: CAREER INTELLIGENCE REPORT (v3)
      ============================================ -->
 <section class="page" id="page-ats">
 
   <div class="section-head">
-    <div class="section-title"><span class="num">02</span>ATS Optimizer</div>
-    <div class="section-meta">Score · Keyword gap · Recruiter 6-second read</div>
+    <div class="section-title"><span class="num">02</span>Career Intelligence Report</div>
+    <div class="section-meta">ATS score · recruiter perception · skill credibility · rewrite engine</div>
   </div>
 
   <div class="module-grid">
     <div class="panel">
       <div class="panel-label"><span>▸ YOUR RESUME</span><span class="badge">PASTE</span></div>
       <div class="form-group">
-        <textarea id="ats-resume" rows="14" placeholder="Paste your full resume text here. Plain text works best — copy from your PDF or DOCX."></textarea>
+        <textarea id="ats-resume" rows="14" placeholder="Paste your full resume text here. Plain text works best — copy from your PDF or DOCX. The more complete, the deeper the analysis."></textarea>
+        <div class="input-hint">▸ Tip: include sections, dates, metrics — exactly as recruiters would see them</div>
       </div>
     </div>
 
     <div class="panel">
       <div class="panel-label"><span>▸ JOB DESCRIPTION</span><span class="badge">TARGET</span></div>
       <div class="form-group">
-        <textarea id="ats-jd" rows="14" placeholder="Paste the job description you're applying for. Include responsibilities, requirements, and 'about the team'."></textarea>
+        <textarea id="ats-jd" rows="14" placeholder="Paste the job description you're applying for. Include responsibilities, requirements, and 'about the team'. The full JD = better keyword gap analysis."></textarea>
+        <div class="input-hint">▸ Tip: keep the entire JD, including 'preferred qualifications'</div>
       </div>
     </div>
   </div>
 
   <div class="btn-row" style="margin-bottom: 24px;">
-    <button class="btn btn-primary" id="ats-go">▸ RUN ATS SIMULATION</button>
-    <button class="btn btn-ghost" data-copy="ats-output">⧉ COPY</button>
-    <button class="btn btn-ghost" data-pdf="ats-output|ATS Report">↓ PDF</button>
-    <button class="btn btn-ghost" data-html="ats-output|ATS Report|yahavi-ats-report.html">↓ HTML</button>
+    <button class="btn btn-primary" id="ats-go">▸ GENERATE CAREER INTELLIGENCE REPORT</button>
   </div>
 
-  <div class="panel">
-    <div class="panel-label"><span>▸ ATS REPORT</span><span class="badge">YAHAVI</span></div>
-    <div class="output-area" id="ats-output">
-      <div class="output-empty">▸ Your ATS score and analysis will appear here</div>
+  <!-- The premium report renders here (cards · bars · severity-coded) -->
+  <div id="report-container">
+    <div class="report-empty">
+      ▸ PASTE RESUME + JD ABOVE · CLICK GENERATE · GET A RECRUITER-GRADE INTELLIGENCE REPORT
     </div>
   </div>
 
@@ -570,5 +570,6 @@ Twitter: @yourhandle"></textarea>
 <div class="toast" id="toast"></div>
 
 <script src="app.js"></script>
+<script src="report.js"></script>
 </body>
 </html>
