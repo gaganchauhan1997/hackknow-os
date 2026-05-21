@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>YAHAVI FORGE — AI Career OS · by Hackknow</title>
+<meta name="description" content="Yahavi Forge — the AI hiring assistant from Hackknow. Resume builder, ATS optimizer, recruiter roast, job tailoring & interview prep. Free intelligence, infinite capability." />
+<meta property="og:title" content="YAHAVI FORGE — AI Career OS" />
+<meta property="og:description" content="Free-tier AI · ATS optimizer · Resume roast · Job tailoring · Interview prep. Built by Hackknow." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ============================================
+     NAV BAR
+     ============================================ -->
+<nav class="nav-bar">
+  <div class="brand">
+    <div class="brand-mark">Y</div>
+    <span>YAHAVI</span>
+    <span class="brand-sub">FORGE</span>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-page="home">HOME</button>
+    <button class="nav-tab" data-page="builder">BUILDER</button>
+    <button class="nav-tab" data-page="ats">ATS</button>
+    <button class="nav-tab" data-page="roast">ROAST</button>
+    <button class="nav-tab" data-page="tailor">TAILOR</button>
+    <button class="nav-tab" data-page="prep">PREP</button>
+    <button class="nav-tab" data-page="gap">GAP/QUICK</button>
+  </div>
+
+  <div class="nav-status">
+    <div class="status-pill" id="connection-status">
+      <span class="dot"></span>NO KEYS — ADD ONE
+    </div>
+    <button class="btn-settings" id="btn-open-settings">▸ KEYS</button>
+  </div>
+</nav>
+
+<!-- ============================================
+     HOME / VISION
+     ============================================ -->
+<main class="container">
+
+<section class="page active" id="page-home">
+
+  <div class="hero">
+    <div class="hero-eyebrow"><span class="blink"></span> AI CAREER OS · LIVE · BY HACKKNOW</div>
+    <h1 class="hero-title">YAHAVI<br><span class="accent">FORGE</span></h1>
+    <p class="hero-sub">
+      Not a resume builder. The <strong>AI hiring assistant</strong> that runs on free-tier intelligence — turning raw experience into <strong>interview callbacks</strong>, ATS hits, and recruiter attention. Powered by Groq, Gemini, OpenRouter & whatever else you bring.
+    </p>
+
+    <div class="hero-meta">
+      <div class="hero-stat"><strong>7</strong><span>AI MODULES</span></div>
+      <div class="hero-stat"><strong>6</strong><span>FREE PROVIDERS</span></div>
+      <div class="hero-stat"><strong>$0</strong><span>MONTHLY COST</span></div>
+      <div class="hero-stat"><strong>∞</strong><span>RESUMES</span></div>
+    </div>
+  </div>
+
+  <!-- Feature grid -->
+  <div class="section-head">
+    <div class="section-title"><span class="num">MODULES</span>The Toolkit</div>
+    <div class="section-meta">Click any card · powered by your keys</div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card yellow" data-goto="builder">
+      <div class="feature-num">01 / BUILDER</div>
+      <div class="feature-title">AI Resume Builder</div>
+      <div class="feature-desc">Type raw experience. Get STAR-method achievement bullets in 5 tones — Corporate, Startup, FAANG, Creative, Executive.</div>
+      <div class="feature-cta">START BUILDING ▸</div>
+    </div>
+
+    <div class="feature-card" data-goto="ats">
+      <div class="feature-num">02 / ATS</div>
+      <div class="feature-title">ATS Optimizer</div>
+      <div class="feature-desc">Score your resume against any job description out of 100. Keyword gap, section feedback, recruiter 6-second read.</div>
+      <div class="feature-cta">SCORE NOW ▸</div>
+    </div>
+
+    <div class="feature-card pink" data-goto="roast">
+      <div class="feature-num">03 / ROAST 🔥</div>
+      <div class="feature-title">Resume Roast Mode</div>
+      <div class="feature-desc">Brutal honesty from a FAANG recruiter, sarcastic HR, or YC founder. Funny. Cutting. Every roast hides a real fix.</div>
+      <div class="feature-cta">BRING THE HEAT ▸</div>
+    </div>
+
+    <div class="feature-card lime" data-goto="tailor">
+      <div class="feature-num">04 / TAILOR</div>
+      <div class="feature-title">Job Tailoring Engine</div>
+      <div class="feature-desc">Paste resume + JD. Get a tailored summary, reordered skills, JD-keyword-injected bullets. 100% truthful, zero invention.</div>
+      <div class="feature-cta">TAILOR IT ▸</div>
+    </div>
+
+    <div class="feature-card dark" data-goto="prep">
+      <div class="feature-num">05 / PREP</div>
+      <div class="feature-title">AI Interview Coach</div>
+      <div class="feature-desc">12 predicted questions, STAR-frame answers, closing power questions, and a 7-item prep checklist for your target role.</div>
+      <div class="feature-cta">PREP ME ▸</div>
+    </div>
+
+    <div class="feature-card" data-goto="gap">
+      <div class="feature-num">06 / GAP</div>
+      <div class="feature-title">Career Gap Framing</div>
+      <div class="feature-desc">Turn gaps, switches, and freelance periods into compelling narrative — resume bullet, LinkedIn About, 60-sec interview answer.</div>
+      <div class="feature-cta">REFRAME ▸</div>
+    </div>
+
+    <div class="feature-card yellow" data-goto="gap">
+      <div class="feature-num">07 / QUICK</div>
+      <div class="feature-title">Achievement Generator</div>
+      <div class="feature-desc">"I made reports in Excel" → 3 powerful, quantified, ATS-magnet bullets. Built for fast iteration during a job hunt.</div>
+      <div class="feature-cta">FORGE ▸</div>
+    </div>
+
+    <div class="feature-card" data-goto="builder">
+      <div class="feature-num">+ MORE</div>
+      <div class="feature-title">Coming Soon</div>
+      <div class="feature-desc">Recruiter Heatmap · Salary Estimator · LinkedIn Import · Portfolio Generator · Multi-Language Resume · Voice-Guided Mode.</div>
+      <div class="feature-cta">ROADMAP ▸</div>
+    </div>
+  </div>
+
+  <!-- Vision block -->
+  <div class="section-head" style="margin-top: 48px;">
+    <div class="section-title"><span class="num">VISION</span>The Thesis</div>
+    <div class="section-meta">Why Yahavi Forge exists</div>
+  </div>
+
+  <div class="panel dark" style="padding: 32px;">
+    <div style="font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--yellow); margin-bottom: 16px;">▸ MANIFESTO</div>
+    <h2 style="font-family: var(--font-display); font-size: clamp(28px, 4vw, 44px); text-transform: uppercase; line-height: 0.95; letter-spacing: -0.025em; margin-bottom: 18px;">
+      Job hunting<br>is broken.<br>
+      <span style="background: var(--yellow); color: var(--ink); padding: 0 8px;">We fixed it.</span>
+    </h2>
+    <p style="font-size: 16px; line-height: 1.55; opacity: 0.85; margin-bottom: 14px; max-width: 780px;">
+      Every resume tool charges you. Every ATS scanner is a paywall. Every coach wants 99 dollars to roast your CV. Meanwhile <strong style="background: var(--pink); padding: 0 4px;">free AI is everywhere</strong> — Groq, Gemini, OpenRouter, Together, Mistral, Cohere — and nobody is composing it into a real career operating system.
+    </p>
+    <p style="font-size: 16px; line-height: 1.55; opacity: 0.85; margin-bottom: 14px; max-width: 780px;">
+      Yahavi Forge is the answer. You bring the keys (60 seconds to grab a free Groq + Gemini key). We bring the orchestration, the prompts, the prompts on top of prompts, the recruiter brain we trained inside the system. <strong style="background: var(--yellow); color: var(--ink); padding: 0 4px;">Zero rupees. Zero subscription.</strong> One brutalist interface that takes your career seriously.
+    </p>
+    <div style="font-family: var(--font-display); font-size: 20px; color: var(--yellow); margin-top: 24px; text-transform: uppercase; letter-spacing: -0.01em;">
+      ▸ "Free intelligence, infinite capability."
+    </div>
+    <div style="font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.6; margin-top: 6px;">
+      — Hackknow · Operator: Myth
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================
+     MODULE 1: RESUME BUILDER
+     ============================================ -->
+<section class="page" id="page-builder">
+
+  <div class="section-head">
+    <div class="section-title"><span class="num">01</span>AI Resume Builder</div>
+    <div class="section-meta">Raw experience → STAR-method bullets</div>
+  </div>
+
+  <div class="mode-chips">
+    <button class="mode-chip active" data-tone="corporate">▸ CORPORATE</button>
+    <button class="mode-chip" data-tone="startup">▸ STARTUP</button>
+    <button class="mode-chip" data-tone="faang">▸ FAANG</button>
+    <button class="mode-chip" data-tone="creative">▸ CREATIVE</button>
+    <button class="mode-chip" data-tone="executive">▸ EXECUTIVE</button>
+  </div>
+
+  <div class="module-grid">
+    <div class="panel">
+      <div class="panel-label">
+        <span>▸ INPUT</span>
+        <span class="badge">RAW</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Target Role</label>
+        <input type="text" id="rb-role" placeholder="e.g. AI Full Stack Developer at a Series-B startup" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Raw Experience / What You Did</label>
+        <textarea id="rb-experience" rows="14" placeholder="Paste a job description, bullet list, or just write what you did in plain language:
+
+• I built dashboards in Power BI for the operations team
+• I wrote Python scripts that automated daily reports
+• I led a team of 4 analysts
+• I integrated GPT-4 into our customer support tool
+
+…Yahavi will transform every line into achievement-grade bullets."></textarea>
+        <div class="input-hint">▸ Don't worry about formatting. Just describe what you did.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="rb-go">▸ FORGE ACHIEVEMENTS</button>
+        <button class="btn btn-ghost" data-copy="rb-output">⧉ COPY OUTPUT</button>
+      </div>
+    </div>
+
+    <div class="panel dark">
+      <div class="panel-label">
+        <span>▸ OUTPUT</span>
+        <span class="badge">FORGED</span>
+      </div>
+
+      <div class="output-area" id="rb-output" style="background: var(--paper); color: var(--ink);">
+        <div class="output-empty">▸ Your achievement bullets will appear here</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================
+     MODULE 2: ATS OPTIMIZER
+     ============================================ -->
+<section class="page" id="page-ats">
+
+  <div class="section-head">
+    <div class="section-title"><span class="num">02</span>ATS Optimizer</div>
+    <div class="section-meta">Score · Keyword gap · Recruiter 6-second read</div>
+  </div>
+
+  <div class="module-grid">
+    <div class="panel">
+      <div class="panel-label"><span>▸ YOUR RESUME</span><span class="badge">PASTE</span></div>
+      <div class="form-group">
+        <textarea id="ats-resume" rows="14" placeholder="Paste your full resume text here. Plain text works best — copy from your PDF or DOCX."></textarea>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label"><span>▸ JOB DESCRIPTION</span><span class="badge">TARGET</span></div>
+      <div class="form-group">
+        <textarea id="ats-jd" rows="14" placeholder="Paste the job description you're applying for. Include responsibilities, requirements, and 'about the team'."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-bottom: 24px;">
+    <button class="btn btn-primary" id="ats-go">▸ RUN ATS SIMULATION</button>
+    <button class="btn btn-ghost" data-copy="ats-output">⧉ COPY REPORT</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label"><span>▸ ATS REPORT</span><span class="badge">YAHAVI</span></div>
+    <div class="output-area" id="ats-output">
+      <div class="output-empty">▸ Your ATS score and analysis will appear here</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================
+     MODULE 3: RESUME ROAST
+     ============================================ -->
+<section class="page" id="page-roast">
+
+  <div class="section-head">
+    <div class="section-title"><span class="num">03</span>Resume Roast 🔥</div>
+    <div class="section-meta">Brutal honesty · Funny · Always useful</div>
+  </div>
+
+  <div class="mode-chips">
+    <button class="mode-chip active" data-persona="recruiter">▸ HONEST RECRUITER</button>
+    <button class="mode-chip" data-persona="faang">▸ FAANG RECRUITER</button>
+    <button class="mode-chip" data-persona="hr">▸ HR ROAST</button>
+    <button class="mode-chip" data-persona="founder">▸ STARTUP FOUNDER</button>
+  </div>
+
+  <div class="module-grid">
+    <div class="panel">
+      <div class="panel-label"><span>▸ FEED THE FIRE</span><span class="badge">PASTE</span></div>
+      <div class="form-group">
+        <textarea id="roast-resume" rows="16" placeholder="Paste your resume. Don't hold back — the more you give, the better the roast."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-pink" id="roast-go">▸ LIGHT IT UP</button>
+        <button class="btn btn-ghost" data-copy="roast-output">⧉ COPY ROAST</button>
+      </div>
+    </div>
+
+    <div class="panel pink">
+      <div class="panel-label"><span>▸ THE ROAST</span><span class="badge" style="background: var(--ink); color: var(--paper);">🔥</span></div>
+      <div class="output-area" id="roast-output" style="background: var(--paper); color: var(--ink);">
+        <div class="output-empty">▸ The flamethrower is loaded — pick a persona, paste resume, hit "LIGHT IT UP"</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================
+     MODULE 4: JOB TAILORING
+     ============================================ -->
+<section class="page" id="page-tailor">
+
+  <div class="section-head">
+    <div class="section-title"><span class="num">04</span>Job Tailoring Engine</div>
+    <div class="section-meta">100% truthful · zero invention · max match</div>
+  </div>
+
+  <div class="module-grid">
+    <div class="panel">
+      <div class="panel-label"><span>▸ ORIGINAL RESUME</span><span class="badge">YOU</span></div>
+      <div class="form-group">
+        <textarea id="tailor-resume" rows="14" placeholder="Paste your current resume."></textarea>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label"><span>▸ TARGET JD</span><span class="badge">GOAL</span></div>
+      <div class="form-group">
+        <textarea id="tailor-jd" rows="14" placeholder="Paste the job description you want to land."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-bottom: 24px;">
+    <button class="btn btn-lime" id="tailor-go">▸ TAILOR IT</button>
+    <button class="btn btn-ghost" data-copy="tailor-output">⧉ COPY TAILORED</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label"><span>▸ TAILORED RESUME</span><span class="badge">MATCH-OPTIMIZED</span></div>
+    <div class="output-area" id="tailor-output">
+      <div class="output-empty">▸ Your tailored resume will appear here</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================
+     MODULE 5: INTERVIEW PREP
+     ============================================ -->
+<section class="page" id="page-prep">
+
+  <div class="section-head">
+    <div class="section-title"><span class="num">05</span>AI Interview Coach</div>
+    <div class="section-meta">12 predicted Qs · STAR answers · power questions</div>
+  </div>
+
+  <div class="module-grid">
+    <div class="panel dark">
+      <div class="panel-label"><span>▸ JOB DESCRIPTION</span><span class="badge">REQUIRED</span></div>
+      <div class="form-group">
+        <textarea id="prep-jd" rows="10" placeholder="Paste the JD you're interviewing for."></textarea>
+      </div>
+
+      <div class="panel-label" style="margin-top: 18px;"><span>▸ RESUME</span><span class="badge">OPTIONAL — PERSONALIZES ANSWERS</span></div>
+      <div class="form-group">
+        <textarea id="prep-resume" rows="8" placeholder="Paste your resume — answers will reference your actual experience."></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="prep-go">▸ BUILD PREP PACK</button>
+        <button class="btn btn-ghost" data-copy="prep-output" style="background: var(--paper);">⧉ COPY</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label"><span>▸ PREP PACK</span><span class="badge">12 Qs + STAR</span></div>
+      <div class="output-area" id="prep-output">
+        <div class="output-empty">▸ Your interview prep pack will appear here</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================
+     MODULE 6 + 7: GAP FRAMING + ACHIEVEMENT
+     ============================================ -->
+<section class="page" id="page-gap">
+
+  <div class="section-head">
+    <div class="section-title"><span class="num">06+07</span>Quick Forges</div>
+    <div class="section-meta">Career gap framing · achievement generator</div>
+  </div>
+
+  <!-- Gap Framing -->
+  <div class="module-grid">
+    <div class="panel yellow">
+      <div class="panel-label"><span>▸ 06 / GAP FRAMING</span><span class="badge">NARRATIVE</span></div>
+      <div class="form-group">
+        <label class="form-label">Tone</label>
+        <select id="gap-tone">
+          <option value="confident-honest">Confident & Honest</option>
+          <option value="growth-oriented">Growth-Oriented</option>
+          <option value="entrepreneurial">Entrepreneurial</option>
+          <option value="academic">Academic / Learning</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Describe the Gap / Transition</label>
+        <textarea id="gap-input" rows="8" placeholder="e.g. I took 14 months off after my pharmacy job to study online courses on data analytics and Python. Did some freelance Excel automation gigs during that time."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="gap-go">▸ REFRAME</button>
+        <button class="btn btn-ghost" data-copy="gap-output">⧉ COPY</button>
+      </div>
+
+      <div style="margin-top: 18px;">
+        <div class="panel-label" style="border-bottom-color: var(--ink);"><span>▸ REFRAMED</span><span class="badge">3 VARIANTS</span></div>
+        <div class="output-area" id="gap-output" style="background: var(--paper);">
+          <div class="output-empty">▸ Resume line · LinkedIn About · Interview answer</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievement Generator -->
+    <div class="panel lime">
+      <div class="panel-label"><span>▸ 07 / ACHIEVEMENT FORGE</span><span class="badge">QUICK</span></div>
+      <div class="form-group">
+        <label class="form-label">Weak Statement to Transform</label>
+        <textarea id="ach-input" rows="5" placeholder='e.g. "I made reports in Excel for the operations team"'></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="ach-go">▸ FORGE 3 VARIANTS</button>
+        <button class="btn btn-ghost" data-copy="ach-output">⧉ COPY</button>
+      </div>
+
+      <div style="margin-top: 18px;">
+        <div class="panel-label" style="border-bottom-color: var(--ink);"><span>▸ FORGED</span><span class="badge">3 OPTIONS</span></div>
+        <div class="output-area" id="ach-output" style="background: var(--paper);">
+          <div class="output-empty">▸ 3 quantified, action-led, ATS-magnet bullets</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</main>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">▸ YAHAVI <span class="accent">FORGE</span></div>
+    <div class="footer-meta">
+      Built by Hackknow · Operator: Myth · 2026<br>
+      "Free intelligence, infinite capability."
+    </div>
+    <div class="footer-links">
+      <a href="https://hackknow.com" target="_blank" rel="noopener noreferrer">HACKKNOW.COM</a>
+      <a href="https://github.com/gaganchauhan1997" target="_blank" rel="noopener noreferrer">GITHUB</a>
+      <a href="https://gaganchauhan1997.github.io/hackknow-os/" target="_blank" rel="noopener noreferrer">HACKKNOW//OS</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================
+     SETTINGS DRAWER
+     ============================================ -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div>
+      <div style="font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px;">▸ CONTROL ROOM</div>
+      <div class="drawer-title">API KEYS</div>
+    </div>
+    <button class="drawer-close" id="drawer-close">✕</button>
+  </div>
+
+  <div style="background: var(--ink); color: var(--paper); padding: 16px; margin-bottom: 24px; border: var(--border); box-shadow: var(--shadow-sm);">
+    <div style="font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--yellow); margin-bottom: 8px;">▸ HOW THIS WORKS</div>
+    <p style="font-size: 13px; line-height: 1.55;">
+      Yahavi Forge runs entirely in your browser. Your API keys are stored <strong style="background: var(--yellow); color: var(--ink); padding: 0 3px;">only in localStorage on this device</strong> — never sent to any Hackknow server. Add one key to start; multiple keys = automatic fallback when one rate-limits.
+    </p>
+  </div>
+
+  <div id="provider-list">
+    <!-- Provider cards injected by JS -->
+  </div>
+
+  <div style="font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-faint); margin-top: 24px; line-height: 1.6; letter-spacing: 0.03em;">
+    ▸ All providers above are <strong>free-tier</strong>. Groq is fastest. Gemini has the largest context (1M tokens). OpenRouter routes across 100+ models. Keys never leave your browser.
+  </div>
+</aside>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
