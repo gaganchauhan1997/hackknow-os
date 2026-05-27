@@ -293,6 +293,7 @@ Use it. Remix it. Ship faster. Don't claim it's yours.
 <p align="center">
   <a href="https://hackknow.com">hackknow.com</a> ·
   <a href="https://yexcel.hackknow.com">yexcel</a> ·
+  <a href="https://yfinder.hackknow.com">yfinder</a> ·
   <a href="https://github.com/gaganchauhan1997">github</a> ·
   <a href="https://twitter.com/hackknow">x</a> ·
   <a href="mailto:hello@hackknow.com">hello@hackknow.com</a>
